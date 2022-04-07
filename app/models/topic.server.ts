@@ -39,6 +39,9 @@ export function getTopicListItems() {
     },
     orderBy: [
       {
+        createdAt: 'desc',
+      },
+      {
         comments: {
           _count: 'desc',
         },
@@ -48,9 +51,6 @@ export function getTopicListItems() {
       },
       {
         viewCount: 'desc',
-      },
-      {
-        createdAt: 'desc',
       },
     ]
   });
