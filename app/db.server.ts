@@ -47,6 +47,9 @@ function getClient() {
   // re-run per request like everything else is. So if you need to change
   // something in this file, you'll need to manually restart the server.
   const client = new PrismaClient({
+    ...(process.env.NODE_ENV !== 'production' && {
+      log: ["query", "info", "warn", "error"],
+    }),
     datasources: {
       db: {
         url: databaseUrl.toString(),
