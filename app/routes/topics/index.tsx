@@ -25,7 +25,7 @@ export default function TopicIndexPage() {
             <p className="py-6">
               로그인하지 마세요. 딥톡하세요.
             </p>
-            <button className="btn btn-primary">토픽 생성하기</button>
+            <Link to="/topics/new" className="btn btn-primary">토픽 생성하기</Link>
           </div>
         </div>
       </div>
