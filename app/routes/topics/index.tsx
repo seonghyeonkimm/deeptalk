@@ -18,7 +18,7 @@ export default function TopicIndexPage() {
 
   return (
     <div>
-      <div className="hero py-5 bg-base-200 mb-4">
+      <div className="hero py-5 bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-md">
             <h1 className="text-5xl font-bold">환영합니다.</h1>
@@ -28,6 +28,9 @@ export default function TopicIndexPage() {
             <Link to="/topics/new" className="btn btn-primary">토픽 생성하기</Link>
           </div>
         </div>
+      </div>
+      <div className="prose my-4">
+        <h2>토픽 리스트</h2>
       </div>
       <div className="flex flex-wrap gap-8">
         {topicListItems.map((item) => {

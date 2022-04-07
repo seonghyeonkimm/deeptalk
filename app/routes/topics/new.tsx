@@ -52,6 +52,9 @@ export default function NewTopicPage() {
 
   return (
     <Form method="post" className="w-full flex flex-col">
+      <div className="prose mb-4">
+        <h2>토픽 생성</h2>
+      </div>
       <div className="form-control w-full">
         <label className="label" htmlFor="title">
           <span className="label-text">제목</span>
@@ -92,7 +95,7 @@ export default function NewTopicPage() {
 
       <div className="text-right">
         <button type="submit" className="btn">
-          저장하기
+          생성하기
         </button>
       </div>
     </Form>

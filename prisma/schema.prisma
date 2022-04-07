@@ -38,7 +38,6 @@ model Topic {
 
 model Comment {
   id    String @id @default(cuid())
-  title String
   body  String
   likeCount Int
 
