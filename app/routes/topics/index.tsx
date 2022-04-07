@@ -31,6 +31,7 @@ export default function TopicIndexPage() {
       </div>
       <div className="prose my-4">
         <h2>토픽 리스트</h2>
+        {topicListItems.length === 0 && <p>아직 작성된 토픽이 없습니다.</p>}
       </div>
       <div className="flex flex-wrap gap-8">
         {topicListItems.map((item) => {
