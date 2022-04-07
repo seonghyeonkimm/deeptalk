@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useActionData, useCatch, useLoaderData, useSubmit, useTransition } from "@remix-run/react";
+import { Form, useActionData, useCatch, useLoaderData, useNavigate, useParams, useSubmit, useTransition } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { EyeIcon, ThumbUpIcon, AnnotationIcon, ClockIcon } from "@heroicons/react/solid";
 import { ThumbUpIcon as OutlineThumbUpIcon } from "@heroicons/react/outline";
@@ -16,15 +16,22 @@ import {
   updateTopicViewCount,
 } from "~/models/topic.server";
 import Modal from "~/components/Modal";
+import Pagination from "~/components/Pagination";
 
 type LoaderData = {
   topic: NonNullable<Awaited<ReturnType<typeof getTopic>>>;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  invariant(params.topicId, "noteId not found");
+export const loader: LoaderFunction = async ({ params, request, ...rest }) => {
+  invariant(params.topicId, "topicId not found");
 
-  const topic = await getTopic({ id: params.topicId });
+  const url = new URL(request.url);
+  const page = parseInt(url.searchParams.get("page") || '1', 10);
+  const topic = await getTopic({
+    id: params.topicId,
+    ...(page >= 1 ? { page } : {})
+  });
+
   if (!topic) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -103,9 +110,13 @@ export default function TopicDetailsPage() {
   const actionData = useActionData() as ActionData;
   const [likeHistory, setLikeHistory] = React.useState({ comments: {} as Record<string, number>, like: 0 });
   const [showLikeError, setShowLikeError] = React.useState(false);
+  const [commentPage, setCommentPage] = React.useState(1);
   const commentFormRef = React.useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
+  const params = useParams();
   const isCommentAdding = transition.state === 'submitting'
     && transition.submission.formData.get('action') === 'create-comment';
+  const commentsTotalPage = Math.ceil(topic._count.comments / 10);
 
   const handleClickTopicLike: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     if (likeHistory.like < 10) {
@@ -241,6 +252,22 @@ export default function TopicDetailsPage() {
           );
         })}
       </div>
+      {topic.comments.length > 0 && (
+        <div className="flex justify-center mb-4 mt-6">
+          <Pagination
+            page={commentPage}
+            totalPage={commentsTotalPage}
+            onNextClick={(nextPage) => {
+              navigate(`/topics/${params.topicId}?page=${nextPage}`, { replace: true });
+              setCommentPage(nextPage);
+            }}
+            onPrevClick={(prevPage) => {
+              navigate(`/topics/${params.topicId}?page=${prevPage}`, { replace: true });
+              setCommentPage(prevPage);
+            }}
+          />
+        </div>
+      )}
       <Modal
         open={showLikeError}
         title="오류 발생"

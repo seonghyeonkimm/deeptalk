@@ -6,11 +6,20 @@ export type { Topic, Comment } from "@prisma/client";
 
 export function getTopic({
   id,
-}: Pick<Topic, "id">) {
+  page = 1,
+  size = 10,
+}: Pick<Topic, "id"> & { page?: number; size?: number; }) {
   return prisma.topic.findFirst({
     where: { id },
     include: {
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
       comments: {
+        skip: (page - 1) * size,
+        take: size,
         orderBy: {
           createdAt: 'desc',
         }
@@ -106,6 +115,23 @@ export function createTopicComment({
         },
       }
     },
+  })
+}
+
+export function getTopicComments({
+  topicId,
+  page = 1,
+  size = 10,
+}: Pick<Comment, 'topicId'> & { page?: number; size?: number }) {
+  return prisma.comment.findMany({
+    take: size,
+    skip: size * page,
+    where: {
+      topicId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    }
   })
 }
 
