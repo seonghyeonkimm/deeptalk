@@ -21,6 +21,9 @@ export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "deeptalk",
   viewport: "width=device-width,initial-scale=1",
+  "og:title": "deeptalk",
+  "og:description": "로그인하지마세요. 딥톡하세요.",
+  "og:image": "https://images.unsplash.com/photo-1562255510-81104e9a3ea1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
 });
 
 export default function App() {
